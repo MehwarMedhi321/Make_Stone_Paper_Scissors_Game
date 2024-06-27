@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stone, Paper & Scissors Game</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            text-align: center;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            margin-top: 50px;
+        }
+
+        .choices {
+            margin: 20px 0;
+        }
+
+        .choice {
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s;
+        }
+
+        .choice:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .choice img {
+            width: 100px;
+            height: 100px;
+            border-radius:50% ;
+            object-fit: cover;
+        }
+
+        .result, .scores {
+            margin-top: 20px;
+        }
+
+        #resultText {
+            font-size: 24px;
+            font-weight: bold;
+            color: #ff5722;
+            animation: fadeIn 1s;
+        }
+
+        .score {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .bounce {
+            animation: bounce 0.5s;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-30px);
+            }
+            60% {
+                transform: translateY(-15px);
+            }
+        }
+
+        .click-animation {
+            animation: click-animation 0.5s;
+        }
+
+        @keyframes click-animation {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes fadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+
+        .choice img {
+            transition: transform 0.3s;
+        }
+
+        .choice img:hover {
+            transform: rotate(15deg);
+        }
+
+        .score {
+            color: #4caf50;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Stone, Paper & Scissors</h1>
+        <div class="choices d-flex justify-content-center">
+            <div id="stone" class="choice mx-3"><img src="stone.png" alt="Stone"></div>
+            <div id="paper" class="choice mx-3"><img src="paper.png" alt="Paper"></div>
+            <div id="scissors" class="choice mx-3"><img src="scissors.png" alt="Scissors"></div>
+        </div>
+        <div class="result">
+            <p id="resultText">Make your move!</p>
+            <p>Player: <span id="playerChoice"></span></p>
+            <p>Computer: <span id="computerChoice"></span></p>
+        </div>
+        <div class="scores">
+            <p class="score">Player Score: <span id="playerScore">0</span></p>
+            <p class="score">Computer Score: <span id="computerScore">0</span></p>
+        </div>
+    </div>
+    <script>
+        const choices = ['stone', 'paper', 'scissors'];
+        const resultText = document.getElementById('resultText');
+        const playerChoiceDisplay = document.getElementById('playerChoice');
+        const computerChoiceDisplay = document.getElementById('computerChoice');
+        const playerScoreDisplay = document.getElementById('playerScore');
+        const computerScoreDisplay = document.getElementById('computerScore');
+
+        let playerScore = 0;
+        let computerScore = 0;
+
+        const elements = document.querySelectorAll('.choice');
+        elements.forEach(element => {
+            element.addEventListener('click', () => {
+                const playerChoice = element.id;
+                const computerChoice = choices[Math.floor(Math.random() * choices.length)];
+
+                playerChoiceDisplay.textContent = capitalizeFirstLetter(playerChoice);
+                computerChoiceDisplay.textContent = capitalizeFirstLetter(computerChoice);
+
+                const result = getResult(playerChoice, computerChoice);
+                resultText.textContent = result;
+                resultText.classList.add('bounce');
+                setTimeout(() => resultText.classList.remove('bounce'), 500);
+
+                if (result === 'You win!') {
+                    playerScore++;
+                } else if (result === 'You lose!') {
+                    computerScore++;
+                }
+
+                playerScoreDisplay.textContent = playerScore;
+                computerScoreDisplay.textContent = computerScore;
+
+                element.classList.add('click-animation');
+                setTimeout(() => element.classList.remove('click-animation'), 500);
+            });
+        });
+
+        function getResult(player, computer) {
+            if (player === computer) {
+                return 'It\'s a draw!';
+            } else if ((player === 'stone' && computer === 'scissors') ||
+                       (player === 'scissors' && computer === 'paper') ||
+                       (player === 'paper' && computer === 'stone')) {
+                return 'You win!';
+            } else {
+                return 'You lose!';
+            }
+        }
+
+        function capitalizeFirstLetter(string) {
+            return string.charAt(0).toUpperCase() + string.slice(1);
+        }
+    </script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
